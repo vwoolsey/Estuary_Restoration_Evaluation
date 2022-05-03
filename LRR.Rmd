@@ -15,7 +15,7 @@ library(ggpubr)
 ```
 
 ```{r}
-Master <- read.csv(file = "Master_Data.csv")
+Monitoring_data <- read.csv(file = "Master_Data.csv")
 view(Master)
 ```
 
