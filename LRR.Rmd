@@ -1,0 +1,34 @@
+---
+title: "Log_Response_Ratio"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+install.packages("tidyverse")
+install.packages("ggpubr")
+library(tidyverse)
+library(ggpubr)
+```
+
+```{r}
+Master <- read.csv(file = "Master_Data.csv")
+view(Master)
+```
+
+
+```{r}
+MasterDS <- filter(Master, Site.Name == "Bolsa Chica Lowlands", Year == "2007")
+#MasterDS1 <- filter(Master, Site.Name == "Hallmark West", Year.post.completion == "1")
+#MSD2 <- MasterDS2 %>% filter(!Sub.site %in% c('IRP Lower Extension Restoration Site'))
+#View(MasterDS1)
+View(MasterDS)
+```
+
+```{r}
+write.table(MasterDS2, file = "PMYr1.csv", sep = ",")
+```
+
