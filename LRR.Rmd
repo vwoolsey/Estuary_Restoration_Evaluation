@@ -16,19 +16,55 @@ library(ggpubr)
 
 ```{r}
 Monitoring_data <- read.csv(file = "Master_Data.csv")
-view(Master)
+View(Monitoring_data)
+unique(Monitoring_data$Site.Name)
+```
+
+```{r}
+unique(Monitoring_data$Metric.Groups)
+```
+
+```{r}
+MD_tidy <- Monitoring_data %>% 
+  filter(!Site.Name %in% c("South San Diego Bay", "San Elijo Lagoon", "Zedler Marsh", "Malibu Lagoon")) %>%
+  filter(Metric.Groups %in% c("Birds", "Endangered Species", "Fish", "Invertebrates", "Non-native Species", "Vegetation Cover", "Vegetation Species Diveristy")) %>%
+  select(Site.Name, Sub.site, Habitat.Type, Year.post.completion, Year, Metrics, Values, Units, Metric.Groups, Restoration.Goal.Met...Y.N.)
+view(MD_tidy)
+```
+
+```{r}
+San_Deiguito_RR <- MD_tidy %>%
+  filter(Site.Name %in% c("San Dieguito", "Tijuana Estuary", "Mugu Lagoon", "Carpinteria Salt Marsh")) %>%
+  filter(Year %in% c("2012", "2020")) %>%
+  filter(Metrics %in% c("Bird Density", "Bird Species Richness", "Fish Density", "Fish Species Richness", "Macroinvertebrate Density", "Macroinvertebrate Species Richness", "Vegetation Cover")) %>%
+  unite(Site.Year, Sub.site, Year) %>%
+  filter(Site.Year %in% c("NA_2012", "NA_2020", "Reference Site_2020")) %>%
+  separate(Site.Year, c('Sub.Site', 'Year'), sep='_') %>%
+  unite(Site.Metric, Site.Name, Metrics) %>%
+  filter(!Site.Metric %in% c("Tijuana Estuary_Bird Density", "Mugu Lagoon_Bird Density", "Tijuana Estuary_Bird Species Richness", "Mugu Lagoon_Bird Species Richness", "Tijuana Estuary_Fish Density", "Carpinteria Salt Marsh_Fish Density", "Mugu Lagoon_Fish Species Richness", "Carpinteria Salt Marsh_Fish Species Richness", "Tijuana Estuary_Macroinvertebrate Density", "Mugu Lagoon_Macroinvertebrate Density", "Mugu Lagoon_Macroinvertebrate Species Richness", "Carpinteria Salt Marsh_Macroinvertebrate Species Richness", "Tijuana Estuary_Vegetation Cover", "Mugu Lagoon_Vegetation Cover"))
+
+view(San_Deiguito_RR)
 ```
 
 
 ```{r}
-MasterDS <- filter(Master, Site.Name == "Bolsa Chica Lowlands", Year == "2007")
-#MasterDS1 <- filter(Master, Site.Name == "Hallmark West", Year.post.completion == "1")
-#MSD2 <- MasterDS2 %>% filter(!Sub.site %in% c('IRP Lower Extension Restoration Site'))
-#View(MasterDS1)
-View(MasterDS)
+MD_tidy %>%
+  filter(Site.Name == "Devereux Slough") %>%
+  filter(Year.post.completion %in% c("Pre-Construction Baseline", "1", "4")) %>%
+  unite(Metrics.Year.Habitat, Year, Metrics, Habitat.Type) %>%
+  filter(Metrics.Year %in% c("2018_Observation Count-Hummingbirds_NA", "2021_Observation Count-Hummingbirds_NA", "2018_Observation Count-Insectivores_NA", "2021_Observation Count-Insectivores_NA", "2018_Observation Count-Omnivores_NA", "2021_Observation Count-Omnivores_NA", "2018_Observation Count-Raptors/Carnivores_NA", "2021_Observation Count-Raptors_NA", "2018_Observation Count-Waders and Shorebirds_NA", "2021_Observation Count-Shorebirds_NA", "2018_Observation Count-Warblers_NA", "2021_Observation Count-Warblers_NA", "2018_Individual Count-Mosquitofish_Freshwater Marsh", "2021_Individual Count-Mosquitofish_Freshwater Marsh", "2018_Individual Count-Red Swamp Crayfish_Freshwater Marsh", "2021_Individual Count-Red Swamp Crayfish_Freshwater Marsh", "2018_Individual Count-California Killifish_Freshwater Marsh", ""))
+
+unique(x$Metrics.Year)
 ```
 
 ```{r}
-write.table(MasterDS2, file = "PMYr1.csv", sep = ",")
+Hallmark_West_RR <- MD_tidy %>%
+  filter(Site.Name == "Hallmark West", Values != "NA", Year %in% c("2017", "2020")) %>%
+  filter(Metrics %in% c("Average Invertebrate Density - Large Core", "Average Invertebrate Density - Small Core", "Average Native Cover", "Total Vegetation Cover", "Absolute Cover")) %>%
+  unite(sub.metric, Sub.site, Year, Metrics) %>%
+  filter(!sub.metric %in% c("Reference Salt Marsh_2017_Total Vegetation Cover", "Reference Coastal Sage Scrub_2017_Absolute Cover")) %>%
+  separate(sub.metric, c('Sub.Site', 'Year', 'Metrics'), sep='_')
+
+view(Hallmark_West_RR)
 ```
 
