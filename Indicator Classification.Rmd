@@ -1,0 +1,49 @@
+---
+title: "Indicator Summary"
+author: "Vincent Woolsey"
+date: "5/6/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+install.packages("tidyverse")
+install.packages("ggpubr")
+install.packages("janitor")
+library(tidyverse)
+library(ggpubr)
+library(janitor)
+```
+
+
+
+```{r}
+Indicator_Data <- read.csv(file = "Indicator_data.csv")
+View(Indicator_Data)
+Indicator_Data
+```
+
+
+```{r}
+ID_tidy <- Indicator_Data %>%
+  select(Indicator.Type..Column.Name., Physical, X, X.1, Biological.Indicators, X.2, X.3, X.4, X.5, X.6, X.7, X.8, X.9, Chemical) %>%
+  row_to_names(row_number = 1)
+  
+
+ID_tidy <- ID_tidy[-c(10,11), ]
+view(ID_tidy)
+```
+
+
+```{r}
+ggplot(data = , aes(x = , y = )) +
+ geom_bar(stat = "identity", width = 0.75) +
+ labs(x = "\n Colour Choice", y = "Count \n", title = "Favourite Colours Survey Results \n") +
+ theme(plot.title = element_text(hjust = 0.5), 
+ axis.title.x = element_text(face="bold", colour="red", size = 12),
+ axis.title.y = element_text(face="bold", colour="red", size = 12))
+```

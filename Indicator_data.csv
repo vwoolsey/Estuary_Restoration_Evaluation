@@ -1,0 +1,13 @@
+Indicator Type (Column Name),Physical,,,Biological Indicators,,,,,,,,,Chemical,,CRAM,Monitoring Reports,,,
+Indicator Group (Column Name),Hydrology,Topography,Soils,Vegetation Cover,Vegetation Species Diversity,Vegetative Growth and Health,Non-native Species,Birds,Fish,Invertebrates,"Other Fauna (mammals, reptiles, etc.)",Endangered Species Metrics (By Species),Water Quality,Total,CRAM,Adaptive Management ,Public Use Section,Includes Explicit Restoration Goals,Contained restoration methods that accounted for climate change
+Hallmark West,1,0,0,3,2,0,2,1,0,2,1,3,4,19,1,0,0,1,0
+Point Mugu,1,1,2,2,3,1,3,2,2,6,0,0,0,23,1,1,0,0,0
+San Dieguito,1,2,0,2,0,2,1,3,4,4,0,0,1,20,0,1,0,1,0
+South San Diego Bay,2,3,4,1,0,1,0,4,6,8,0,0,10,39,0,0,0,0,0
+Devereux Slough,4,2,0,3,3,1,6,3,1,2,1,5,7,38,0,0,1,1,0
+Bolsa Chica,4,2,0,14,0,0,2,3,2,3,0,11,4,45,0,0,0,0,0
+San Elijo Lagoon,0,4,3,2,1,2,2,2,2,2,0,4,8,32,1,1,0,1,1
+Colorado Lagoon,0,0,0,4,4,1,1,4,5,1,0,0,0,20,0,0,0,1,0
+Average ,1.63,1.75,1.13,3.88,1.63,1.00,2.13,2.75,2.75,3.50,0.25,2.88,4.25,29.50,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,1,0,0,1,0
