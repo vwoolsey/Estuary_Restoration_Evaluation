@@ -11,12 +11,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ```{r}
-install.packages("tidyverse")
-install.packages("ggpubr")
-install.packages("janitor")
+#install.packages("tidyverse")
+#install.packages("ggpubr")
+#install.packages("janitor")
 library(tidyverse)
 library(ggpubr)
 library(janitor)
+library(ggplot2)
+library(viridis)
+library(hrbrthemes)
 ```
 
 
@@ -29,21 +32,43 @@ Indicator_Data
 
 
 ```{r}
-ID_tidy <- Indicator_Data %>%
+ID_data <- Indicator_Data %>%
   select(Indicator.Type..Column.Name., Physical, X, X.1, Biological.Indicators, X.2, X.3, X.4, X.5, X.6, X.7, X.8, X.9, Chemical) %>%
   row_to_names(row_number = 1)
   
 
-ID_tidy <- ID_tidy[-c(10,11), ]
-view(ID_tidy)
+ID_data <- ID_data[-c(9,10,11), ]
+#view(ID_data)
+
+ID_tidy <- pivot_longer(ID_data, cols = 2:14, names_to ="Indicator Groups", values_to = "Frequency of Use")
+ID_tidy_df <- data.frame(ID_tidy)
+
+ID_tidy_df$Frequency.of.Use <- as.numeric(ID_tidy_df$Frequency.of.Use)
+
 ```
 
 
 ```{r}
-ggplot(data = , aes(x = , y = )) +
- geom_bar(stat = "identity", width = 0.75) +
- labs(x = "\n Colour Choice", y = "Count \n", title = "Favourite Colours Survey Results \n") +
+box_fills <- c("blue", "blue", "blue", "orange", "orange", "orange", "orange", "orange", "green", "green", "green", "green", "green")
+
+#scale_fill_manual(values = box_fills, guide = "none")
+
+ggplot(data = ID_tidy_df, aes(x = Indicator.Group..Column.Name., y = Frequency.of.Use, fill = Indicator.Groups)) +
+ geom_bar(stat = "identity", width = 0.75, position = "stack",  color = "black") + 
+  coord_flip() + 
+  scale_fill_manual(values = box_fills, guide = "none") +
+ labs(x = "\n Restored Wetlands", y = "Total Indicators Used \n", title = "Indicator Use Frequency in Restored Wetlands \n") +
  theme(plot.title = element_text(hjust = 0.5), 
  axis.title.x = element_text(face="bold", colour="red", size = 12),
  axis.title.y = element_text(face="bold", colour="red", size = 12))
+
+#levels(factor(ID_tidy_df$Indicator.Group..Column.Name.))
+
 ```
+
+
+```{r}
+
+```
+
+
