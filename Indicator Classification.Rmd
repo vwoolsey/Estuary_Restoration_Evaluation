@@ -68,6 +68,9 @@ ggplot(data = ID_tidy_df, aes(x = Indicator.Group..Column.Name., y = Frequency.o
 
 
 ```{r}
+#ggsave("./Figures/Community/nMDS_all_strata_speciesID.tiff", 
+           nMDS.plot.all,
+           dpi = 150)
 
 ```
 

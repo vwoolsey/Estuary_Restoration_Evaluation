@@ -8,15 +8,18 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-install.packages("tidyverse")
-install.packages("ggpubr")
+#install.packages("tidyverse")
+#install.packages("ggpubr")
+```
+
+```{r}
 library(tidyverse)
 library(ggpubr)
 ```
 
 ```{r}
 Monitoring_data <- read.csv(file = "Master_Data.csv")
-View(Monitoring_data)
+#View(Monitoring_data)
 unique(Monitoring_data$Site.Name)
 ```
 
@@ -29,7 +32,8 @@ MD_tidy <- Monitoring_data %>%
   filter(!Site.Name %in% c("South San Diego Bay", "San Elijo Lagoon", "Zedler Marsh", "Malibu Lagoon")) %>%
   filter(Metric.Groups %in% c("Birds", "Endangered Species", "Fish", "Invertebrates", "Non-native Species", "Vegetation Cover", "Vegetation Species Diveristy")) %>%
   select(Site.Name, Sub.site, Habitat.Type, Year.post.completion, Year, Metrics, Values, Units, Metric.Groups, Metric.Type)
-view(MD_tidy)
+
+#view(MD_tidy)
 ```
 
 ```{r}
@@ -59,11 +63,15 @@ SAND_Year1$SAND_Reference_Values <- SAND_Reference_Values
 
 SAND_Year1.1 <- SAND_Year1[, c(1,2,3,4,5,7,8,9,6,10,11)]
 SAND_Year1.2 <- SAND_Year1.1 %>%
-  rename(Degraded.Values = Values, Restored.Values = SAND_Restored_Values, Recent.Reference.Values = SAND_Reference_Values)
+  rename(Degraded.Values = Values, Restored.Values = SAND_Restored_Values, Recent.Reference.Values = SAND_Reference_Values, Sub.site = Sub.Site)
 
 SAND_Degraded_Restored_Reference <- SAND_Year1.2 %>%
   separate(Site.Metric, c('Site.Name', 'Metrics'), sep='_') %>%
   select(-Year.post.completion, -Year, -Units)
+
+SAND_Degraded_Restored_Reference$Degraded.Values <- as.numeric(SAND_Degraded_Restored_Reference$Degraded.Values)
+SAND_Degraded_Restored_Reference$Restored.Values <- as.numeric(SAND_Degraded_Restored_Reference$Restored.Values)
+SAND_Degraded_Restored_Reference$Recent.Reference.Values <- as.numeric(SAND_Degraded_Restored_Reference$Recent.Reference.Values)
 
 SAND_Degraded_Restored_Reference_FINAL <- SAND_Degraded_Restored_Reference[, c(1,3,4,2,5,6,7,8,9)]
 
@@ -90,10 +98,15 @@ Restored_Values <- DS_Year4$Values
 DS_Year1$Restored_Values <- Restored_Values
 
 DS_Year1.1 <- DS_Year1[, c(1,2,3,4,5,6,8,9,7,10)]
+
 DS_Degraded_Restored_Reference_FINAL <- DS_Year1.1 %>%
   rename(Degraded.Values = Values, Restored.Values = Restored_Values) %>%
   add_column("Recent.Reference.Values" = NA) %>%
   select(-Year, -Year.post.completion)
+
+DS_Degraded_Restored_Reference_FINAL$Degraded.Values <- as.numeric(DS_Degraded_Restored_Reference_FINAL$Degraded.Values)
+DS_Degraded_Restored_Reference_FINAL$Restored.Values <- as.numeric(DS_Degraded_Restored_Reference_FINAL$Restored.Values)
+DS_Degraded_Restored_Reference_FINAL$Recent.Reference.Values <- as.numeric(DS_Degraded_Restored_Reference_FINAL$Recent.Reference.Values)
 
 View(DS_Degraded_Restored_Reference_FINAL)
 ```
@@ -109,28 +122,30 @@ Hallmark_West_RR <- MD_tidy %>%
 #view(Hallmark_West_RR)
 
 Degraded_Restored_HW <- Hallmark_West_RR %>%
-  arrange(Year.post.completion, .by_group = FALSE) %>%
-  unite(Sub.site.habitat, Sub.Site, Habitat.Type) 
+  arrange(Year.post.completion, .by_group = FALSE) 
 
 HW_Year1 <- filter(Degraded_Restored_HW, Year.post.completion == "1")
-HW_Year4 <- filter(Degraded_Restored_HW, Year.post.completion == "4")
-
-
-
-#SAND_Year1 <- filter(Degraded_Restored_Reference_SD, Year.post.completion == "1")
-#SAND_Year9 <- filter(Degraded_Restored_Reference_SD, Year.post.completion == "9")
-#SAND_Ref <- filter(Degraded_Restored_Reference_SD, Sub.Site == "Reference Site")
-
+HW_Year4 <- filter(Degraded_Restored_HW, Year.post.completion == "4", !Sub.Site %in% c("Reference Salt Marsh West", "Reference Salt Marsh Central", "Reference Salt Marsh East"))
+HW_Ref <- filter(Degraded_Restored_HW, Year.post.completion == "4", Sub.Site %in% c("Reference Salt Marsh West", "Reference Salt Marsh Central", "Reference Salt Marsh East"))
 
 HW_Restored_Values <- HW_Year4$Values
+HW_Reference_Values <- HW_Ref$Values
+HW_Reference_Values_complete <- c("67.9", "356.5", "162.3", "0", "193.4", "41.4", "", "", "")
+
 HW_Year1$HW_Restored_Values <- HW_Restored_Values
+HW_Year1$HW_Reference_Values_complete <- HW_Reference_Values_complete
 
-HW_Year1 <- HW_Year1[, c(1,2,3,4,5,6,8,9,10,7,11)]
-names(HW_Year1)[10] <- "Degraded_Values"
-HW_Degraded_Restored_FINAL <- HW_Year1 %>%
-  select(-Year, -Year.post.completion)
+HW_Year1.1 <- HW_Year1[, c(1,2,3,4,5,6,8,9,10,7,11,12)]
 
-View(HW_Degraded_Restored_FINAL)
+HW_Degraded_Restored__Reference_FINAL <- HW_Year1.1 %>%
+  rename(Degraded.Values = Values, Restored.Values = HW_Restored_Values, Recent.Reference.Values = HW_Reference_Values_complete, Sub.site = Sub.Site) %>%
+  select(-Year, -Year.post.completion, -Units)
+
+HW_Degraded_Restored__Reference_FINAL$Degraded.Values <- as.numeric(HW_Degraded_Restored__Reference_FINAL$Degraded.Values)
+HW_Degraded_Restored__Reference_FINAL$Restored.Values <- as.numeric(HW_Degraded_Restored__Reference_FINAL$Restored.Values)
+HW_Degraded_Restored__Reference_FINAL$Recent.Reference.Values <- as.numeric(HW_Degraded_Restored__Reference_FINAL$Recent.Reference.Values)
+
+View(HW_Degraded_Restored__Reference_FINAL)
 ```
 
 
@@ -149,16 +164,92 @@ ML_Year6 <- filter(Malibu_Lagoon_RR, Year.post.completion == "6")
 ML_Restored_Values <- ML_Year6$Values
 ML_Year1$ML_Restored_Values <- ML_Restored_Values
 
-ML_Year1 <- ML_Year1 %>% 
-  add_column("Recent_Reference_Year" = NA)
+ML_Year1.1 <- ML_Year1 %>% 
+  add_column("Recent.Reference.Values" = NA) %>%
+  rename(Degraded.Values = Values, Restored.Values = ML_Restored_Values)
 
-ML_Year1 <- ML_Year1[, c(1,2,3,4,5,6,8,9,11,7,10)]
-names(ML_Year1)[10] <- "Degraded_Values"
+ML_Year1.2 <- ML_Year1.1[, c(1,2,3,4,5,6,8,9,7,10,11)]
 
-ML_Degraded_Restored_FINAL <- ML_Year1 %>%
+ML_Degraded_Restored__Reference_FINAL <- ML_Year1.2 %>%
   select(-Year.post.completion, -Year)
 
-View(ML_Degraded_Restored_FINAL)
+#ML_Degraded_Restored__Reference_FINAL$Degraded.Values <- as.numeric(ML_Degraded_Restored__Reference_FINAL$Degraded.Values)
+#ML_Degraded_Restored__Reference_FINAL$Restored.Values <- as.numeric(ML_Degraded_Restored__Reference_FINAL$Restored.Values)
+#ML_Degraded_Restored__Reference_FINAL$Recent.Reference.Values <- as.numeric(ML_Degraded_Restored__Reference_FINAL$Recent.Reference.Values)
+
+View(ML_Degraded_Restored__Reference_FINAL)
 ```
 
+
+```{r}
+Point_Mugu_RR <- MD_tidy %>%
+  filter(Site.Name == "NBVC Point Mugu", Year %in% c("2017", "2020")) %>%
+  arrange(Year.post.completion, .by_group = FALSE) %>%
+  unite(Years, Year.post.completion, Year) %>%
+  filter(Years != "NA_2017") %>%
+  separate(Years, c('Year.post.completion', 'Year'), sep='_')
+
+PM_Year1 <- filter(Point_Mugu_RR, Year.post.completion == "1", Sub.site != "IRP Lower Extension Reference Site A", !Metrics %in% c("Average Total Insects", "Average Insect Diversity", "Total Native Plant Cover", "Total Non-Native Plant Cover", "Total Vegetation Cover"))
+PM_Year4 <- filter(Point_Mugu_RR, Year.post.completion == "4",!Metrics %in% c("Number of Nonnative Species (Releve)", "Total Cover (Releve)"))
+PM_Ref <- filter(Point_Mugu_RR, Year.post.completion == "NA")
+
+
+PM_Degraded_Values <- PM_Year1$Values
+PM_Degraded_Values[c(7,8,9,10)] <- c("NA", "NA", "NA", "NA")
+PM_Restored_Values <- PM_Year4$Values
+PM_Reference_Values <- PM_Ref$Values
+PM_Reference_Values[9] <- "0"
+
+PM_Year4$PM_Degraded_Values <- PM_Degraded_Values
+PM_Year4$PM_Reference_Values <- PM_Reference_Values
+
+PM_Year4.1 <- PM_Year4[, c(1,2,3,4,5,6,8,9,10,11,7,12)]
+
+
+PM_Degraded_Restored__Reference_FINAL <- PM_Year4.1 %>%
+  rename(Restored.Values = Values, Degraded.Values = PM_Degraded_Values, Recent.Reference.Values = PM_Reference_Values) %>%
+  select(-Year, -Year.post.completion, -Units)
+
+PM_Degraded_Restored__Reference_FINAL$Degraded.Values <- as.numeric(PM_Degraded_Restored__Reference_FINAL$Degraded.Values)
+PM_Degraded_Restored__Reference_FINAL$Restored.Values <- as.numeric(PM_Degraded_Restored__Reference_FINAL$Restored.Values)
+PM_Degraded_Restored__Reference_FINAL$Recent.Reference.Values <- as.numeric(PM_Degraded_Restored__Reference_FINAL$Recent.Reference.Values)
+
+View(PM_Degraded_Restored__Reference_FINAL)
+```
+
+
+```{r}
+Bolsa_Chica_RR <- MD_tidy %>%
+  filter(Site.Name == "Bolsa Chica Lowlands", Year.post.completion %in% c("1", "7"), Values != "NA") %>%
+  arrange(Year.post.completion)
+
+BC_Year1 <- filter(Bolsa_Chica_RR, Year.post.completion == "1", Metrics %in% c("# of successful Snowy Plover fledglings ", "Total # of Snowy Plover nests ", "LETE fledgling rate", "Mean LETE clutch size", "# of Belding's Savannah Sparrow territories"))
+BC_Year7 <- filter(Bolsa_Chica_RR, Year.post.completion == "7", Metrics %in% c("Total # of successful Snowy Plover fledglings", "Total # of Snowy Plover nests", "LETE fledgling rate", "Mean LETE clutch size", "# of Belding's Savannah Sparrow territories"))
+
+BC_Degraded_Values <- BC_Year1$Values
+BC_Restored_Values <- BC_Year7$Value
+BC_Restored_Values[3] <- "0.325"
+
+BC_Year1$BC_Restored_Values <- BC_Restored_Values
+
+BC_Year1.1 <- BC_Year1 %>%
+  add_column("Recent.Reference.Values" = NA) %>%
+  rename(Restored.Values = BC_Restored_Values, Degraded.Values = Values) %>%
+  select(-Year, -Year.post.completion, -Units)
+
+BC_Degraded_Restored__Reference_FINAL <- BC_Year1.1[, c(1,2,3,4,6,7,5,8,9)]
+
+BC_Degraded_Restored__Reference_FINAL$Degraded.Values <- as.numeric(BC_Degraded_Restored__Reference_FINAL$Degraded.Values)
+BC_Degraded_Restored__Reference_FINAL$Restored.Values <- as.numeric(BC_Degraded_Restored__Reference_FINAL$Restored.Values)
+BC_Degraded_Restored__Reference_FINAL$Recent.Reference.Values <- as.numeric(BC_Degraded_Restored__Reference_FINAL$Recent.Reference.Values)
+
+view(BC_Degraded_Restored__Reference_FINAL)
+```
+
+
+```{r}
+LRR_ALL_SITES <- rbind(SAND_Degraded_Restored_Reference_FINAL, DS_Degraded_Restored_Reference_FINAL, HW_Degraded_Restored__Reference_FINAL, ML_Degraded_Restored__Reference_FINAL, PM_Degraded_Restored__Reference_FINAL, BC_Degraded_Restored__Reference_FINAL)
+
+view(LRR_ALL_SITES)
+```
 
