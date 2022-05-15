@@ -459,13 +459,13 @@ LRR <- data.frame(Site.Name, Metric.Groups, MEAN_LRR_DEGRADED_RESTORED_ALL, SD_L
 ```{r}
 MEAN_LRR_RESTORED_REFERENCE_ALL <- c(mean(SAND_Fish$Restored_Reference_RR), mean(SAND_Birds$Restored_Reference_RR), mean(SAND_Invertebrates$Restored_Reference_RR), mean(SAND_VegCover$Restored_Reference_RR), mean(HW_Invertebrates$Restored_Reference_RR[-c(4,6)]), mean(PM_Birds$Restored_Reference_RR), mean(PM_Fish$Restored_Reference_RR), mean(PM_Invertebrates$Restored_Reference_RR), mean(PM_VegCover$Restored_Reference_RR), mean(PM_VegSpecies$Restored_Reference_RR))
 
-Site.Name <- c("HW", "HW", "HW", "PM", "PM", "PM", "PM", "SD", "SD", "SD", "SD")
-Metric.Groups <- c("Vegetation Cover", "Vegetation Sp. Diversity", "Invertebrates", "Vegetation Sp. Diversity", "Invertebrates", "Fish", "Birds", "Vegetation Cover", "Fish", "Birds", "Invertebrates")
-Metric.Groups.ABBR <- c("VC", "VSD", "I", "VSD", "I", "F", "B", "VC", "F", "B", "I")
-Avg.LRR <- c(-0.01373019, -0.01047130, -0.9453782, 1.0986123, 0.4795731, 0.3364722, 0.1965213, -0.06371581, 0.1040744, 0.4054651, -0.05491632)
-SD.LRR <- c(NA, NA, 0.9827355, NA, NA, 0.2379218, 0.1289208, NA, 0.2198847, 1.241267, 0.4657671)
-AVGRefLRR <- data.frame(Site.Name, Metric.Groups, Metric.Groups.ABBR, Avg.LRR, SD.LRR)
-view(AVGRefLRR)
+SD_LRR_RESTORED_REFERENCE_ALL <- c(sd(SAND_Fish$Restored_Reference_RR), sd(SAND_Birds$Restored_Reference_RR), sd(SAND_Invertebrates$Restored_Reference_RR), sd(SAND_VegCover$Restored_Reference_RR), sd(HW_Invertebrates$Restored_Reference_RR[-c(4,6)]), sd(PM_Birds$Restored_Reference_RR), sd(PM_Fish$Restored_Reference_RR), sd(PM_Invertebrates$Restored_Reference_RR), sd(PM_VegCover$Restored_Reference_RR), sd(PM_VegSpecies$Restored_Reference_RR))
+
+Site.Name.Ref <- c("SAND", "SAND", "SAND", "SAND", "HW", "PM", "PM", "PM", "PM", "PM")
+Metric.Groups.Ref <- c("F", "B", "I", "VC", "I", "B", "F", "I", "VC", "VD")
+
+LRR_Ref <- data.frame(Site.Name.Ref, Metric.Groups.Ref, MEAN_LRR_RESTORED_REFERENCE_ALL, SD_LRR_RESTORED_REFERENCE_ALL)
+#view(LRR_Ref)
 ```
 
 
@@ -496,6 +496,64 @@ ForestGraph
 
 
 ```{r}
+LRR_Ref$Site.Name <- factor(LRR_Ref$Site.Name, levels = c("SAND", "HW", "PM"))
+LRR_Ref$Metric.Groups <- factor(LRR_Ref$Metric.Groups, levels = c("F", "B", "I", "VC", "VD"))
 
+Reference_ForestGraph <- ggplot(LRR_Ref, aes(y = Metric.Groups.Ref, x = MEAN_LRR_RESTORED_REFERENCE_ALL, xmin = MEAN_LRR_RESTORED_REFERENCE_ALL - SD_LRR_RESTORED_REFERENCE_ALL, xmax = MEAN_LRR_RESTORED_REFERENCE_ALL + SD_LRR_RESTORED_REFERENCE_ALL, colour = Site.Name.Ref, shape = Metric.Groups.Ref)) +
+  theme(panel.grid.major = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black")) + 
+  geom_point(size = 3) + 
+  geom_errorbarh(height = 0.1) + 
+  scale_x_continuous(limits = c(-4,6), name = 'LRR') +
+  ylab('Metric Categories') +
+  geom_vline(xintercept = 0, color = 'black', linetype = 'dashed') + 
+  facet_grid(Site.Name~., scales = 'free', space = 'free') + 
+  scale_colour_manual(values = c("#56B4E9", "#999999", "#D55E00")) + 
+  theme(axis.text.y = element_text(size = 8, colour = "black"), axis.text.x = element_text(size = 12)) +
+  theme(axis.title.x = element_text(face = "bold", size = 16), axis.title.y = element_text(face = "bold", size = 16)) +
+  ggtitle("Metric Responses to Restoration Efforts: Reference vs Restored") + 
+  theme(plot.title = element_text(size = 10, face = "bold")) + 
+  scale_shape_manual(values = c(18,4,25,15,16)) + 
+  labs(shape = "Metric Groups", colour = "Sites")
+
+Reference_ForestGraph
 ```
 
+
+```{r}
+Reverse_ForestGraph <- ggplot(LRR, aes(y = Site.Name, x = MEAN_LRR_DEGRADED_RESTORED_ALL, xmin = MEAN_LRR_DEGRADED_RESTORED_ALL - SD_LRR_DEGRADED_RESTORED_ALL, xmax = MEAN_LRR_DEGRADED_RESTORED_ALL + SD_LRR_DEGRADED_RESTORED_ALL, colour = Metric.Groups, shape = Site.Name)) +
+  theme(panel.grid.major = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black")) + 
+  geom_point(size = 2.5) + 
+  geom_errorbarh(height = 0.1) + 
+  scale_shape_manual(values = c(15:18, 4, 8)) + 
+  scale_x_continuous(limits = c(-4,6), name = 'LRR') + 
+  ylab('Sites') +
+  geom_vline(xintercept = 0, color = 'black', linetype = 'dashed') +
+  facet_grid(Metric.Groups~., scales = 'free',space = 'free') +
+  scale_colour_manual(values = c("#CC79A7", "#E69F00", "#009E73", "#56B4E9", "#999999", "#D55E00", "#663399")) +
+  theme(axis.text.y = element_text(size = 8, colour = "black"), axis.text.x = element_text(size = 12)) +
+  theme(axis.title.x = element_text(face="bold", size = 16), axis.title.y = element_text(face = "bold", size = 16)) + ggtitle("Metric Responses to Restoration Efforts: Indicator Based") + 
+  theme(plot.title = element_text(size = 9, face = "bold")) + labs(shape = "Sites", colour = "Metric Groups") + 
+  theme(strip.text.y = element_text(size = 7, face="bold"))
+
+Reverse_ForestGraph
+```
+
+
+```{r}
+Reverse_Reference_ForestGraph <- ggplot(LRR_Ref, aes(y = Site.Name.Ref, x = MEAN_LRR_RESTORED_REFERENCE_ALL, xmin = MEAN_LRR_RESTORED_REFERENCE_ALL - SD_LRR_RESTORED_REFERENCE_ALL, xmax = MEAN_LRR_RESTORED_REFERENCE_ALL + SD_LRR_RESTORED_REFERENCE_ALL, colour = Metric.Groups.Ref, shape = Site.Name.Ref)) + 
+  theme(panel.grid.major = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black")) + 
+  geom_point(size = 3) + 
+  geom_errorbarh(height = 0.1) + 
+  scale_x_continuous(limits=c(-4,6), name = 'LRR') + ylab('Metric Categories') + 
+  geom_vline(xintercept = 0, color = 'black', linetype = 'dashed') + 
+  facet_grid(Metric.Groups~., scales = 'free', space = 'free') +
+  scale_colour_manual(values = c("#CC79A7", "#009E73", "#56B4E9", "#D55E00", "#663399")) +
+  theme(axis.text.y = element_text(size = 8, colour = "black"), axis.text.x = element_text(size = 12)) +
+  theme(axis.title.x = element_text(face = "bold", size = 16), axis.title.y = element_text(face = "bold", size = 16)) + 
+  ggtitle("Metric Responses to Restoration Efforts: Reference vs Restored (Indicator Based)") +
+  theme(plot.title = element_text(size = 9, face = "bold")) + 
+  scale_shape_manual(values = c(18,4,8)) + 
+  labs(shape="Sites", colour = "Metric Groups")
+
+Reverse_Reference_ForestGraph
+```
