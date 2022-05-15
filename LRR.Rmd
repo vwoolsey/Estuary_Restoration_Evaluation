@@ -10,11 +10,13 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 #install.packages("tidyverse")
 #install.packages("ggpubr")
+#install.packages("SciViews")
 ```
 
 ```{r}
 library(tidyverse)
 library(ggpubr)
+library(SciViews)
 ```
 
 ```{r}
@@ -27,10 +29,12 @@ unique(Monitoring_data$Site.Name)
 unique(Monitoring_data$Metric.Groups)
 ```
 
+
+
 ```{r}
 MD_tidy <- Monitoring_data %>% 
   filter(!Site.Name %in% c("South San Diego Bay", "San Elijo Lagoon", "Zedler Marsh", "Malibu Lagoon")) %>%
-  filter(Metric.Groups %in% c("Birds", "Endangered Species", "Fish", "Invertebrates", "Non-native Species", "Vegetation Cover", "Vegetation Species Diveristy")) %>%
+  filter(Metric.Groups %in% c("Birds", "Endangered Species", "Fish", "Invertebrates", "Non-native Species", "Vegetation Cover", "Vegetation Species Diversity")) %>%
   select(Site.Name, Sub.site, Habitat.Type, Year.post.completion, Year, Metrics, Values, Units, Metric.Groups, Metric.Type)
 
 #view(MD_tidy)
@@ -56,6 +60,10 @@ SAND_Year1 <- filter(Degraded_Restored_Reference_SD, Year.post.completion == "1"
 SAND_Year9 <- filter(Degraded_Restored_Reference_SD, Year.post.completion == "9")
 SAND_Ref <- filter(Degraded_Restored_Reference_SD, Sub.Site == "Reference Site")
 
+SAND_Year1$Values <- as.numeric(SAND_Year1$Values)
+SAND_Year1$Values[c(1,2)] <- SAND_Year1$Values[c(1,2)]/2.47105
+SAND_Year1$Values[c(7,8,9,10)] <- SAND_Year1$Values[c(7,8,9,10)]*100
+
 SAND_Restored_Values <- SAND_Year9$Values
 SAND_Reference_Values <- SAND_Ref$Values
 SAND_Year1$SAND_Restored_Values <- SAND_Restored_Values
@@ -75,7 +83,7 @@ SAND_Degraded_Restored_Reference$Recent.Reference.Values <- as.numeric(SAND_Degr
 
 SAND_Degraded_Restored_Reference_FINAL <- SAND_Degraded_Restored_Reference[, c(1,3,4,2,5,6,7,8,9)]
 
-View(SAND_Degraded_Restored_Reference_FINAL)
+#View(SAND_Degraded_Restored_Reference_FINAL)
 ```
 
 
@@ -85,14 +93,15 @@ Devereux_Slough_RR <- Monitoring_data %>%
   filter(Metric.Groups %in% c("Vegetation Cover", "Vegetation Species Diversity", "Vegetation Growth and Health", "Non-native Species", "Birds", "Fish")) %>% 
   filter(Year.post.completion %in% c("1", "4")) %>% 
   filter(Metrics %in% c("Vegetation Cover-Sub Canopy Non-Native", "Vegetation Cover-Sub Canopy Native", "Vegetation Cover-Canopy Native", "Vegetation Cover-Canopy Non-Native", "Vegetation Cover-Native", "Vegetation Cover-Non-Native", "Bird Species Diversity", "Fish Species Diversity", "Individual Count Total", "Species Diversity-Native", "Species Diversity-Non-Native")) %>%
-  select(-Habitat.Type.Area..acres., -Date.Details, -Units, -Collection.Method, -Data.Collection.Frequency, -Restoration.Goal.Met...Y.N., -Metric.Significance, -Analyzed.by.who., -Notes) 
+  select(-Habitat.Type.Area..acres., -Date.Details, -Units, -Collection.Method, -Data.Collection.Frequency, -Restoration.Goal.Met...Y.N., -Metric.Significance, -Analyzed.by.who., -Notes) %>% 
+   arrange(Year.post.completion, .by_group = FALSE)
 
-Devereux_Slough_RR <- arrange(Devereux_Slough_RR, Year.post.completion, .by_group = FALSE)
+view(Devereux_Slough_RR)
+
 DS_Year1 <- filter(Devereux_Slough_RR, Year.post.completion == "1")
-DS_Year1 <- DS_Year1[-c(4, 9:10, 13), ]
+DS_Year1 <-  DS_Year1[-c(4, 9:10, 13), ]
 DS_Year4 <- filter(Devereux_Slough_RR, Year.post.completion == "4")
 DS_Year4 <- DS_Year4[-c(4,12,24,32,38), ]
-#View(DS_Year4)
 
 Restored_Values <- DS_Year4$Values
 DS_Year1$Restored_Values <- Restored_Values
@@ -114,23 +123,22 @@ View(DS_Degraded_Restored_Reference_FINAL)
 ```{r}
 Hallmark_West_RR <- MD_tidy %>%
   filter(Site.Name == "Hallmark West", Values != "NA", Year %in% c("2017", "2020")) %>%
-  filter(Metrics %in% c("Average Invertebrate Density - Large Core", "Average Invertebrate Density - Small Core", "Average Native Cover", "Total Vegetation Cover", "Absolute Cover")) %>%
+  arrange(Year.post.completion, .by_group = FALSE) %>%
+  filter(!Metric.Groups %in% c("Birds")) %>%
   unite(Sub.site.year, Sub.site, Year.post.completion) %>%
   filter(!Sub.site.year %in% c("Reference Salt Marsh West_1", "Reference Salt Marsh Central_1", "Reference Salt Marsh East_1", "Reference Salt Marsh_1", "Reference Coastal Sage Scrub_1")) %>%
   separate(Sub.site.year, c('Sub.Site', 'Year.post.completion'), sep='_')
 
 #view(Hallmark_West_RR)
 
-Degraded_Restored_HW <- Hallmark_West_RR %>%
-  arrange(Year.post.completion, .by_group = FALSE) 
-
-HW_Year1 <- filter(Degraded_Restored_HW, Year.post.completion == "1")
-HW_Year4 <- filter(Degraded_Restored_HW, Year.post.completion == "4", !Sub.Site %in% c("Reference Salt Marsh West", "Reference Salt Marsh Central", "Reference Salt Marsh East"))
-HW_Ref <- filter(Degraded_Restored_HW, Year.post.completion == "4", Sub.Site %in% c("Reference Salt Marsh West", "Reference Salt Marsh Central", "Reference Salt Marsh East"))
+HW_Year1 <- filter(Hallmark_West_RR, Year.post.completion == "1")
+HW_Year4 <- filter(Hallmark_West_RR, Year.post.completion == "4", !Sub.Site %in% c("Reference Salt Marsh West", "Reference Salt Marsh Central", "Reference Salt Marsh East"))
+HW_Ref <- filter(Hallmark_West_RR, Year.post.completion == "4", Sub.Site %in% c("Reference Salt Marsh West", "Reference Salt Marsh Central", "Reference Salt Marsh East"))
 
 HW_Restored_Values <- HW_Year4$Values
+HW_Restored_Values[9] <- "0"
 HW_Reference_Values <- HW_Ref$Values
-HW_Reference_Values_complete <- c("67.9", "356.5", "162.3", "0", "193.4", "41.4", "", "", "")
+HW_Reference_Values_complete <- c("67.9", "356.5", "162.3", "0", "193.4", "41.4", "", "", "", "", "", "", "")
 
 HW_Year1$HW_Restored_Values <- HW_Restored_Values
 HW_Year1$HW_Reference_Values_complete <- HW_Reference_Values_complete
@@ -151,31 +159,38 @@ View(HW_Degraded_Restored__Reference_FINAL)
 
 ```{r}
 Malibu_Lagoon_RR <- Monitoring_data %>% 
-  filter(Site.Name == "Malibu Lagoon") %>% 
-  filter(Year.post.completion == "1" | Year.post.completion == "6") %>%
-  filter(Metric.Groups == "Fish" | Metric.Groups == "Birds" | Metric.Groups == "Vegetation Cover") %>% 
-  arrange(Year.post.completion, .by_group = FALSE) %>%
-  slice(-c(7:9, 14:16, 17, 19)) %>%
-  select(-Habitat.Type.Area..acres., -Date.Details, -Units, -Collection.Method, -Data.Collection.Frequency, -Restoration.Goal.Met...Y.N., -Metric.Significance, -Analyzed.by.who., -Notes)
+  filter(Site.Name == "Malibu Lagoon", Year.post.completion %in% c("1", "2", "6"), Metric.Groups %in% c("Fish", "Birds", "Vegetation Cover", "Invertebrates"), !Metrics %in% c("Cladophora Algal Cover", "Ruppia Algal Cover", "Wrack Cover")) %>% 
+  arrange(Year.post.completion, .by_group = FALSE) %>% 
+  unite(year.metric, Year.post.completion, Metrics) %>%
+  filter(!year.metric %in% c("2_Bird Abundance", "2_Bird Diversity", "2_Native Fish Diversity ", "2_Nonnative Fish Diversity", "2_Native Vegetation Cover", "2_Nonnative Vegetation Cover")) %>%
+  separate(year.metric, c('Year.post.completion', 'Metrics'), sep='_') %>%
+  slice(-c(13, 15)) %>%
+  select(-Habitat.Type.Area..acres., -Date.Details, -Units, -Collection.Method, -Data.Collection.Frequency, -Restoration.Goal.Met...Y.N., -Metric.Significance, -Analyzed.by.who., -Notes) 
+  
+ML_Year1 <- filter(Malibu_Lagoon_RR, Year.post.completion %in%  c("1", "2"))
+x <- c("Bird Abundance", "Bird Diversity", "Native Fish Diversity ", "Nonnative Fish Diversity", "Invertebrate Diversity ", "Native Vegetation Cover", "Nonnative Vegetation Cover")
+ML_Year1.1 <- ML_Year1 %>%
+  slice(match(x, Metrics))
 
-ML_Year1 <- filter(Malibu_Lagoon_RR, Year.post.completion == "1")
 ML_Year6 <- filter(Malibu_Lagoon_RR, Year.post.completion == "6")
 
 ML_Restored_Values <- ML_Year6$Values
-ML_Year1$ML_Restored_Values <- ML_Restored_Values
+ML_Restored_Values[1] <- "7050"
+ML_Year1.1$Values[1] <- "7563"
+ML_Year1.1$ML_Restored_Values <- ML_Restored_Values
 
-ML_Year1.1 <- ML_Year1 %>% 
+ML_Year1.2 <- ML_Year1.1 %>% 
   add_column("Recent.Reference.Values" = NA) %>%
   rename(Degraded.Values = Values, Restored.Values = ML_Restored_Values)
 
-ML_Year1.2 <- ML_Year1.1[, c(1,2,3,4,5,6,8,9,7,10,11)]
+ML_Year1.3 <- ML_Year1.2[, c(1,2,3,4,5,6,8,9,7,10,11)]
 
-ML_Degraded_Restored__Reference_FINAL <- ML_Year1.2 %>%
+ML_Degraded_Restored__Reference_FINAL <- ML_Year1.3 %>%
   select(-Year.post.completion, -Year)
 
-#ML_Degraded_Restored__Reference_FINAL$Degraded.Values <- as.numeric(ML_Degraded_Restored__Reference_FINAL$Degraded.Values)
-#ML_Degraded_Restored__Reference_FINAL$Restored.Values <- as.numeric(ML_Degraded_Restored__Reference_FINAL$Restored.Values)
-#ML_Degraded_Restored__Reference_FINAL$Recent.Reference.Values <- as.numeric(ML_Degraded_Restored__Reference_FINAL$Recent.Reference.Values)
+ML_Degraded_Restored__Reference_FINAL$Degraded.Values <- as.numeric(ML_Degraded_Restored__Reference_FINAL$Degraded.Values)
+ML_Degraded_Restored__Reference_FINAL$Restored.Values <- as.numeric(ML_Degraded_Restored__Reference_FINAL$Restored.Values)
+ML_Degraded_Restored__Reference_FINAL$Recent.Reference.Values <- as.numeric(ML_Degraded_Restored__Reference_FINAL$Recent.Reference.Values)
 
 View(ML_Degraded_Restored__Reference_FINAL)
 ```
@@ -183,22 +198,25 @@ View(ML_Degraded_Restored__Reference_FINAL)
 
 ```{r}
 Point_Mugu_RR <- MD_tidy %>%
-  filter(Site.Name == "NBVC Point Mugu", Year %in% c("2017", "2020")) %>%
+  filter(Site.Name == "NBVC Point Mugu", Year %in% c("2017", "2020"), !Metrics == "Average Density of Coffee Bean Snail") %>%
   arrange(Year.post.completion, .by_group = FALSE) %>%
   unite(Years, Year.post.completion, Year) %>%
   filter(Years != "NA_2017") %>%
   separate(Years, c('Year.post.completion', 'Year'), sep='_')
 
-PM_Year1 <- filter(Point_Mugu_RR, Year.post.completion == "1", Sub.site != "IRP Lower Extension Reference Site A", !Metrics %in% c("Average Total Insects", "Average Insect Diversity", "Total Native Plant Cover", "Total Non-Native Plant Cover", "Total Vegetation Cover"))
-PM_Year4 <- filter(Point_Mugu_RR, Year.post.completion == "4",!Metrics %in% c("Number of Nonnative Species (Releve)", "Total Cover (Releve)"))
+#view(Point_Mugu_RR)
+
+PM_Year1 <- filter(Point_Mugu_RR, Year.post.completion == "1", Sub.site != "IRP Lower Extension Reference Site A", !Metrics %in% c("Average Total Insects", "Non-Native Plant Species Richness", "Total Vegetation Cover"))
+PM_Year4 <- filter(Point_Mugu_RR, Year.post.completion == "4", !Habitat.Type == "Upland habitat")
 PM_Ref <- filter(Point_Mugu_RR, Year.post.completion == "NA")
 
+PM_Year1$Metrics[c(8, 9)] <- PM_Year1$Metrics[c(9, 8)]
+PM_Year1$Values[c(8, 9)] <- PM_Year1$Values[c(9, 8)]
 
 PM_Degraded_Values <- PM_Year1$Values
-PM_Degraded_Values[c(7,8,9,10)] <- c("NA", "NA", "NA", "NA")
 PM_Restored_Values <- PM_Year4$Values
 PM_Reference_Values <- PM_Ref$Values
-PM_Reference_Values[9] <- "0"
+PM_Reference_Values[8] <- "0"
 
 PM_Year4$PM_Degraded_Values <- PM_Degraded_Values
 PM_Year4$PM_Reference_Values <- PM_Reference_Values
@@ -220,15 +238,20 @@ View(PM_Degraded_Restored__Reference_FINAL)
 
 ```{r}
 Bolsa_Chica_RR <- MD_tidy %>%
-  filter(Site.Name == "Bolsa Chica Lowlands", Year.post.completion %in% c("1", "7"), Values != "NA") %>%
+  filter(Site.Name == "Bolsa Chica Lowlands", Year.post.completion %in% c("1", "5", "7"), Values != "NA", Metric.Groups %in% c("Endangered Species", "Fish", "Invertebrates", "Vegetation Cover")) %>%
   arrange(Year.post.completion)
 
-BC_Year1 <- filter(Bolsa_Chica_RR, Year.post.completion == "1", Metrics %in% c("# of successful Snowy Plover fledglings ", "Total # of Snowy Plover nests ", "LETE fledgling rate", "Mean LETE clutch size", "# of Belding's Savannah Sparrow territories"))
-BC_Year7 <- filter(Bolsa_Chica_RR, Year.post.completion == "7", Metrics %in% c("Total # of successful Snowy Plover fledglings", "Total # of Snowy Plover nests", "LETE fledgling rate", "Mean LETE clutch size", "# of Belding's Savannah Sparrow territories"))
+view(Bolsa_Chica_RR)
+unique(Bolsa_Chica_RR$Metrics)
+
+BC_Year1 <- Bolsa_Chica_RR %>%
+  filter(Year.post.completion == "1", Metrics %in% c("# of successful Snowy Plover fledglings ", "Total # of Snowy Plover nests ", "Mean LETE clutch size", "# of Belding's Savannah Sparrow territories"))
+
+BC_Year7 <- Bolsa_Chica_RR %>%
+  filter(Year.post.completion == "7", Metrics %in% c("Total # of successful Snowy Plover fledglings", "Total # of Snowy Plover nests", "Mean LETE clutch size", "# of Belding's Savannah Sparrow territories"))
 
 BC_Degraded_Values <- BC_Year1$Values
-BC_Restored_Values <- BC_Year7$Value
-BC_Restored_Values[3] <- "0.325"
+BC_Restored_Values <- BC_Year7$Values
 
 BC_Year1$BC_Restored_Values <- BC_Restored_Values
 
@@ -243,7 +266,7 @@ BC_Degraded_Restored__Reference_FINAL$Degraded.Values <- as.numeric(BC_Degraded_
 BC_Degraded_Restored__Reference_FINAL$Restored.Values <- as.numeric(BC_Degraded_Restored__Reference_FINAL$Restored.Values)
 BC_Degraded_Restored__Reference_FINAL$Recent.Reference.Values <- as.numeric(BC_Degraded_Restored__Reference_FINAL$Recent.Reference.Values)
 
-view(BC_Degraded_Restored__Reference_FINAL)
+#view(BC_Degraded_Restored__Reference_FINAL)
 ```
 
 
@@ -251,5 +274,228 @@ view(BC_Degraded_Restored__Reference_FINAL)
 LRR_ALL_SITES <- rbind(SAND_Degraded_Restored_Reference_FINAL, DS_Degraded_Restored_Reference_FINAL, HW_Degraded_Restored__Reference_FINAL, ML_Degraded_Restored__Reference_FINAL, PM_Degraded_Restored__Reference_FINAL, BC_Degraded_Restored__Reference_FINAL)
 
 view(LRR_ALL_SITES)
+```
+
+```{r}
+Degraded_Restored_RR <- ln(LRR_ALL_SITES$Restored.Values/LRR_ALL_SITES$Degraded.Values)
+LRR_ALL_SITES$Degraded_Restored_RR <- Degraded_Restored_RR
+
+Restored_Reference_RR <- ln(LRR_ALL_SITES$Restored.Values/LRR_ALL_SITES$Recent.Reference.Values)
+LRR_ALL_SITES$Restored_Reference_RR <- Restored_Reference_RR
+
+#View(LRR_ALL_SITES)
+```
+
+```{r}
+SAND_Fish <- LRR_ALL_SITES %>%
+  filter(Site.Name == "San Dieguito", Metric.Groups == "Fish")
+
+mean(SAND_Fish$Degraded_Restored_RR)
+mean(SAND_Fish$Restored_Reference_RR)
+
+SAND_Birds <- LRR_ALL_SITES %>%
+  filter(Site.Name == "San Dieguito", Metric.Groups == "Birds")
+
+mean(SAND_Birds$Degraded_Restored_RR)
+mean(SAND_Birds$Restored_Reference_RR)
+
+SAND_Invertebrates <- LRR_ALL_SITES %>%
+  filter(Site.Name == "San Dieguito", Metric.Groups == "Invertebrates")
+
+mean(SAND_Invertebrates$Degraded_Restored_RR)
+mean(SAND_Invertebrates$Restored_Reference_RR)
+
+SAND_VegCover <- LRR_ALL_SITES %>%
+  filter(Site.Name == "San Dieguito", Metric.Groups == "Vegetation Cover")
+
+mean(SAND_VegCover$Degraded_Restored_RR)
+mean(SAND_VegCover$Restored_Reference_RR)
+```
+
+#write out what comparisons are being made
+```{r}
+DS_VegCover <- LRR_ALL_SITES %>%
+  filter(Site.Name == "Devereux Slough", Metrics %in% c("Vegetation Cover-Native", "Vegetation Cover-Sub Canopy Native"))
+
+mean(DS_VegCover$Degraded_Restored_RR)
+sd(DS_VegCover$Degraded_Restored_RR)
+
+DS_Nonnative <- LRR_ALL_SITES %>%
+  filter(Site.Name == "Devereux Slough", Metrics %in% c("Vegetation Cover-Non-Native", "Vegetation Cover-Sub Canopy Non-Native", "Species Diversity-Non-Native"))
+
+mean(DS_Nonnative$Degraded_Restored_RR)*-1
+sd(DS_Nonnative$Degraded_Restored_RR)*-1
+
+DS_VegDiversity <- LRR_ALL_SITES %>%
+  filter(Metric.Groups == "Vegetation Species Diversity", Site.Name == "Devereux Slough")
+
+mean(DS_VegDiversity$Degraded_Restored_RR)
+sd(DS_VegDiversity$Degraded_Restored_RR)
+
+DS_Birds <- filter(LRR_ALL_SITES, Metric.Groups == "Birds", Site.Name == "Devereux Slough")
+
+mean(DS_Birds$Degraded_Restored_RR)
+sd(DS_Birds$Degraded_Restored_RR) #only one point
+
+DS_Fish <- filter(LRR_ALL_SITES, Metric.Groups == "Fish", Site.Name == "Devereux Slough")
+
+mean(DS_Fish$Degraded_Restored_RR)
+sd(DS_Fish$Degraded_Restored_RR)
+```
+
+
+```{r}
+HW_Invertebrates <- LRR_ALL_SITES %>%
+  filter(Site.Name == "Hallmark West", Metric.Groups == "Invertebrates")
+
+mean(HW_Invertebrates$Degraded_Restored_RR[-c(6)])
+mean(HW_Invertebrates$Restored_Reference_RR[-c(4,6)])
+
+HW_VegCover <- LRR_ALL_SITES %>%
+  filter(Site.Name == "Hallmark West", Metrics %in% c("Average Native Cover", "Total Vegetation Cover", "Absolute Cover"))
+
+mean(HW_VegCover$Degraded_Restored_RR)
+
+HW_NonNative <- LRR_ALL_SITES %>%
+  filter(Site.Name == "Hallmark West", Metrics %in% c("Exotic Species Cover", "Average Nonnative Cover"))
+
+#mean(HW_NonNative$Degraded_Restored_RR)*-1
+
+HW_VegDiversity <- LRR_ALL_SITES %>%
+  filter(Site.Name == "Hallmark West", Metrics == "Species Diversity")
+
+mean(HW_VegDiversity$Degraded_Restored_RR)
+```
+
+
+```{r}
+ML_Birds <- LRR_ALL_SITES %>%
+  filter(Site.Name == "Malibu Lagoon", Metrics %in% c("Bird Abundance", "Bird Diversity"))
+
+mean(ML_Birds$Degraded_Restored_RR)
+
+ML_Fish <- LRR_ALL_SITES %>%
+  filter(Site.Name == "Malibu Lagoon", Metrics == "Native Fish Diversity ")
+
+mean(ML_Fish$Degraded_Restored_RR)
+
+ML_Invertebrates <- LRR_ALL_SITES %>%
+  filter(Site.Name == "Malibu Lagoon", Metrics == "Invertebrate Diversity ")
+
+mean(ML_Invertebrates$Degraded_Restored_RR)
+
+ML_VegCover <- LRR_ALL_SITES %>%
+  filter(Site.Name == "Malibu Lagoon", Metrics == "Native Vegetation Cover")
+
+mean(ML_VegCover$Degraded_Restored_RR)
+
+ML_NonNative <- LRR_ALL_SITES %>%
+  filter(Site.Name == "Malibu Lagoon", Metrics %in% c("Nonnative Fish Diversity", "Nonnative Vegetation Cover"))
+
+mean(ML_NonNative$Degraded_Restored_RR)*-1
+```
+
+One of the reasons its so hard to analyze success is because of how much methodology changes from year one to last year
+```{r}
+PM_Birds <- LRR_ALL_SITES %>%
+  filter(Site.Name == "NBVC Point Mugu", Metric.Groups == "Birds")
+
+mean(PM_Birds$Degraded_Restored_RR)
+mean(PM_Birds$Restored_Reference_RR)
+
+PM_Fish <- LRR_ALL_SITES %>%
+  filter(Site.Name == "NBVC Point Mugu", Metric.Groups == "Fish")
+
+mean(PM_Fish$Degraded_Restored_RR[-c(1)])
+mean(PM_Fish$Restored_Reference_RR)
+
+PM_Invertebrates <- LRR_ALL_SITES %>%
+  filter(Site.Name == "NBVC Point Mugu", Metric.Groups == "Invertebrates")
+
+mean(PM_Invertebrates$Degraded_Restored_RR[-c(1)])
+mean(PM_Invertebrates$Restored_Reference_RR)
+
+PM_NonNative <- LRR_ALL_SITES %>%
+  filter(Site.Name == "NBVC Point Mugu", Metric.Groups == "Non-native Species")
+
+mean(PM_NonNative$Degraded_Restored_RR)*-1
+#mean(PM_Invertebrates$Restored_Reference_RR)*-1
+
+PM_VegCover <- LRR_ALL_SITES %>%
+  filter(Site.Name == "NBVC Point Mugu", Metric.Groups == "Vegetation Cover")
+
+mean(PM_VegCover$Degraded_Restored_RR)
+mean(PM_VegCover$Restored_Reference_RR)
+
+PM_VegSpecies <- LRR_ALL_SITES %>%
+  filter(Site.Name == "NBVC Point Mugu", Metric.Groups == "Vegetation Species Diversity")
+
+mean(PM_VegSpecies$Degraded_Restored_RR)
+mean(PM_VegSpecies$Restored_Reference_RR)
+```
+
+
+```{r}
+BC_Endangered_Species <- LRR_ALL_SITES %>%
+  filter(Site.Name == "Bolsa Chica Lowlands")
+
+mean(BC_Endangered_Species$Degraded_Restored_RR)
+```
+
+
+```{r}
+MEAN_LRR_DEGRADED_RESTORED_ALL <- c(mean(SAND_Fish$Degraded_Restored_RR), mean(SAND_Birds$Degraded_Restored_RR), mean(SAND_Invertebrates$Degraded_Restored_RR), mean(SAND_VegCover$Degraded_Restored_RR), mean(DS_VegCover$Degraded_Restored_RR), mean(DS_Nonnative$Degraded_Restored_RR)*-1, mean(DS_VegDiversity$Degraded_Restored_RR), mean(DS_Birds$Degraded_Restored_RR), mean(DS_Fish$Degraded_Restored_RR), mean(HW_Invertebrates$Degraded_Restored_RR[-c(6)]), mean(HW_VegCover$Degraded_Restored_RR), mean(HW_VegDiversity$Degraded_Restored_RR), mean(ML_Birds$Degraded_Restored_RR), mean(ML_Fish$Degraded_Restored_RR), mean(ML_Invertebrates$Degraded_Restored_RR), mean(ML_VegCover$Degraded_Restored_RR), mean(ML_NonNative$Degraded_Restored_RR)*-1, mean(PM_Birds$Degraded_Restored_RR), mean(PM_Fish$Degraded_Restored_RR[-c(1)]), mean(PM_Invertebrates$Degraded_Restored_RR[-c(1)]), mean(PM_NonNative$Degraded_Restored_RR)*-1, mean(PM_VegCover$Degraded_Restored_RR), mean(PM_VegSpecies$Degraded_Restored_RR), mean(BC_Endangered_Species$Degraded_Restored_RR))
+
+SD_LRR_DEGRADED_RESTORED_ALL <- c(sd(SAND_Fish$Degraded_Restored_RR), sd(SAND_Birds$Degraded_Restored_RR), sd(SAND_Invertebrates$Degraded_Restored_RR), sd(SAND_VegCover$Degraded_Restored_RR), sd(DS_VegCover$Degraded_Restored_RR), sd(DS_Nonnative$Degraded_Restored_RR)*-1, sd(DS_VegDiversity$Degraded_Restored_RR), sd(DS_Birds$Degraded_Restored_RR), sd(DS_Fish$Degraded_Restored_RR), sd(HW_Invertebrates$Degraded_Restored_RR[-c(6)]), sd(HW_VegCover$Degraded_Restored_RR), sd(HW_VegDiversity$Degraded_Restored_RR), sd(ML_Birds$Degraded_Restored_RR), sd(ML_Fish$Degraded_Restored_RR), sd(ML_Invertebrates$Degraded_Restored_RR), sd(ML_VegCover$Degraded_Restored_RR), sd(ML_NonNative$Degraded_Restored_RR)*-1, sd(PM_Birds$Degraded_Restored_RR), sd(PM_Fish$Degraded_Restored_RR[-c(1)]), sd(PM_Invertebrates$Degraded_Restored_RR[-c(1)]), sd(PM_NonNative$Degraded_Restored_RR)*-1, sd(PM_VegCover$Degraded_Restored_RR), sd(PM_VegSpecies$Degraded_Restored_RR), sd(BC_Endangered_Species$Degraded_Restored_RR))
+
+Site.Name <- c("SAND", "SAND", "SAND", "SAND", "DS", "DS", "DS", "DS", "DS", "HW", "HW", "HW", "ML", "ML", "ML", "ML", "ML", "PM", "PM", "PM", "PM", "PM", "PM", "BC")
+Metric.Groups <- c("F", "B", "I", "VC", "VC", "NN", "VD", "B", "F", "I", "VC", "VD", "B", "F", "I", "VC", "NN", "B", "F", "I", "NN", "VC", "VD", "ES")
+
+LRR <- data.frame(Site.Name, Metric.Groups, MEAN_LRR_DEGRADED_RESTORED_ALL, SD_LRR_DEGRADED_RESTORED_ALL)
+#view(LRR)
+```
+
+
+```{r}
+MEAN_LRR_RESTORED_REFERENCE_ALL <- c(mean(SAND_Fish$Restored_Reference_RR), mean(SAND_Birds$Restored_Reference_RR), mean(SAND_Invertebrates$Restored_Reference_RR), mean(SAND_VegCover$Restored_Reference_RR), mean(HW_Invertebrates$Restored_Reference_RR[-c(4,6)]), mean(PM_Birds$Restored_Reference_RR), mean(PM_Fish$Restored_Reference_RR), mean(PM_Invertebrates$Restored_Reference_RR), mean(PM_VegCover$Restored_Reference_RR), mean(PM_VegSpecies$Restored_Reference_RR))
+
+Site.Name <- c("HW", "HW", "HW", "PM", "PM", "PM", "PM", "SD", "SD", "SD", "SD")
+Metric.Groups <- c("Vegetation Cover", "Vegetation Sp. Diversity", "Invertebrates", "Vegetation Sp. Diversity", "Invertebrates", "Fish", "Birds", "Vegetation Cover", "Fish", "Birds", "Invertebrates")
+Metric.Groups.ABBR <- c("VC", "VSD", "I", "VSD", "I", "F", "B", "VC", "F", "B", "I")
+Avg.LRR <- c(-0.01373019, -0.01047130, -0.9453782, 1.0986123, 0.4795731, 0.3364722, 0.1965213, -0.06371581, 0.1040744, 0.4054651, -0.05491632)
+SD.LRR <- c(NA, NA, 0.9827355, NA, NA, 0.2379218, 0.1289208, NA, 0.2198847, 1.241267, 0.4657671)
+AVGRefLRR <- data.frame(Site.Name, Metric.Groups, Metric.Groups.ABBR, Avg.LRR, SD.LRR)
+view(AVGRefLRR)
+```
+
+
+```{r}
+LRR$Site.Name <- factor(LRR$Site.Name, levels = c("SAND", "DS", "HW", "ML", "PM", "BC"))
+LRR$Metric.Groups <- factor(LRR$Metric.Groups, levels = c("VC", "VD", "NN", "B", "F", "ES", "I"))
+
+ForestGraph <- ggplot(LRR, aes(y = Metric.Groups, x = MEAN_LRR_DEGRADED_RESTORED_ALL, xmin = MEAN_LRR_DEGRADED_RESTORED_ALL - SD_LRR_DEGRADED_RESTORED_ALL, xmax = MEAN_LRR_DEGRADED_RESTORED_ALL + SD_LRR_DEGRADED_RESTORED_ALL, colour=Site.Name, shape=Metric.Groups)) + 
+  theme(panel.grid.major = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black")) + 
+  geom_point(size = 2.5) + 
+  geom_errorbarh(height = 0.1) +
+  scale_shape_manual(values = c(15:18, 4, 8, 25)) + 
+  scale_x_continuous(limits = c(-4,6), name = 'LRR') + 
+  ylab('Metric Categories') + 
+  geom_vline(xintercept = 0, color = 'black', linetype = 'dashed') +
+  facet_grid(Site.Name~., scales = 'free', space = 'free') + 
+  scale_colour_manual(values = c("#CC79A7", "#E69F00", "#009E73", "#56B4E9", "#999999", "#D55E00")) +
+  theme(axis.text.y = element_text(size = 8, colour = "black"), axis.text.x = element_text(size = 12)) +
+  theme(axis.title.x = element_text(face = "bold", size = 16), axis.title.y = element_text(face = "bold", size = 16)) +
+  ggtitle("Metric Responses to Restoration Efforts: Degraded vs Restored") + 
+  theme(plot.title = element_text(size = 9, face = "bold")) + 
+  labs(shape="Metric Groups", colour = "Sites")
+
+ForestGraph
+
+```
+
+
+
+```{r}
+
 ```
 
