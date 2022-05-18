@@ -26,7 +26,7 @@ library(hrbrthemes)
 
 ```{r}
 Indicator_Data <- read.csv(file = "Indicator_data.csv")
-View(Indicator_Data)
+#View(Indicator_Data)
 Indicator_Data
 ```
 
@@ -45,13 +45,15 @@ ID_tidy_df <- data.frame(ID_tidy)
 
 ID_tidy_df$Frequency.of.Use <- as.numeric(ID_tidy_df$Frequency.of.Use)
 
+#view(ID_tidy_df)
+
 ```
 
 
 ```{r}
-box_fills <- c("blue", "blue", "blue", "orange", "orange", "orange", "orange", "orange", "green", "green", "green", "green", "green")
+ID_tidy_df$Indicator.Groups <- factor(ID_tidy_df$Indicator.Groups, levels = c("Hydrology", "Topography", "Soils", "Vegetation Cover", "Vegetation Species Diversity", "Vegetative Growth and Health","Non-native Species", "Birds", "Fish", "Invertebrates", "Other Fauna (mammals, reptiles, etc.)", "Endangered Species Metrics (By Species)", "Water Quality"))
 
-#scale_fill_manual(values = box_fills, guide = "none")
+box_fills <- c("red", "red3", "red4", "seagreen1", "seagreen2", "seagreen3", "seagreen4", "sienna1", "sienna2", "sienna3", "sienna","sienna4", "deepskyblue")
 
 ggplot(data = ID_tidy_df, aes(x = Indicator.Group..Column.Name., y = Frequency.of.Use, fill = Indicator.Groups)) +
  geom_bar(stat = "identity", width = 0.75, position = "stack",  color = "black") + 
@@ -61,14 +63,11 @@ ggplot(data = ID_tidy_df, aes(x = Indicator.Group..Column.Name., y = Frequency.o
  theme(plot.title = element_text(hjust = 0.5), 
  axis.title.x = element_text(face="bold", colour="red", size = 12),
  axis.title.y = element_text(face="bold", colour="red", size = 12))
-
-#levels(factor(ID_tidy_df$Indicator.Group..Column.Name.))
-
 ```
 
 
 ```{r}
-#ggsave("./Figures/Community/nMDS_all_strata_speciesID.tiff", 
+ggsave("./Figures/Community/nMDS_all_strata_speciesID.tiff", 
            nMDS.plot.all,
            dpi = 150)
 

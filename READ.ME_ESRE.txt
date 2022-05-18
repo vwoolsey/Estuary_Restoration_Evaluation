@@ -1,0 +1,134 @@
+Main information
+---------------------------------------------------
+Dataset Title: 
+Principal investigator: Vincent Woolsey, UC Irvine, vwoolsey@uci.edu
+Co-Investigator: Sanjay Das, UC Irvine, dassk@uci.edu; Taylor McGrath, UC Irvine, tcmcgrat@uci.edy; Phillip Samples, UC Irvine, psamples@uci.edu; Ajeet Samra, UC Irvine, ajeets@uci.edu
+Contact person for questions: Vincent Woolsey
+README version date: May 17, 2022
+
+Date of data collection: September 2021-May 2022
+
+Information about geographic location of data collection: All data collection was done by compiling data from post-restoration monitoring reports. These reports were either sourced directly from the report's authors or indirectly from Southern California Coastal Water Research Project (SCCWRP).
+
+Keywords used to describe the data topic: 
+
+Language information: This database is in English. 
+
+Information about funding sources that supported the collection of the data: No funding was aquired for this data collection.
+
+Data and File Overview
+---------------------------------------------------
+File 1: Restoration_Monitoring_Data.xlsx
+	⁃	Short Description: This excel workbook contains all data collection and indicator classification data/metadata. There are 15 sheets in this file. The first sheet is our combined data set for all sites which our analyses used and is also included separately as a .csv file.. Sheet 2 contains the metadata for the column information for the master data sheet. Sheet 3 contains the frequency of indicator use for each site. Sheet 4 is the metadata sheet for the indicator classification system and lists out all the different indicators classifyied for each group. Sheet 5 contains a summary table for the problems encountered while preparing our analyses and data collection. Sheet 6 is a summary table of reports' statistics. Sheets 7-15 contain the data for each specific site that they're named after and are all included separately in this dataset as .csv files as well.
+	⁃	File format: Excel workbook (.xlsx, Microsoft Excel for PC version 2204)
+	⁃	Date Created: May 17, 2022
+File 2: Monitoring_Master_Data.csv
+	⁃	Short Description: Master data sheet compiling all of individual sites' reports. This data set was used in our analyses.
+	⁃	File format: Comma separated values (.csv)
+	⁃	Date Created: May 17, 2022
+File 3: Monitoring_Metadata.csv
+	⁃	Short Description: Column information (“metadata”) for monitoring master data, in csv format. 
+	⁃	File format: Comma separated values (.csv)
+	⁃	Date Created: May 17, 2022
+File 4: Indicator_data.csv
+	⁃	Short Description: Frequency data for indicator usage grouped into distinct categories. This data was used for indicator grouping correspondance analyses and heat maps.
+	⁃	File format: Comma separated values (.csv)
+	⁃	Date Created: May 17, 2022
+File 5: List_of_indicators_Metadata.csv
+	-	Short Description: Indicator grouping information (“metadata”), in csv format.
+	⁃	File format: Comma separated values (.csv)
+	⁃	Date Created: May 17, 2022
+File x: Hallmark_West.csv
+	-	Short Description: Data compiled from the Hallmark West post-restoration monitoring reports.
+	⁃	File format: Comma separated values (.csv)
+	⁃	Date Created: May 17, 2022
+File x: Point_Mugu.csv
+	-	Short Description: Data compiled from the Point Mugu post-restoration monitoring reports.
+	⁃	File format: Comma separated values (.csv)
+	⁃	Date Created: May 17, 2022
+File x: San_Dieguito.csv
+	-	Short Description: Data compiled from the San Dieguito post-restoration monitoring reports.
+	⁃	File format: Comma separated values (.csv)
+	⁃	Date Created: May 17, 2022
+File x: Devereux_Slough.csv
+	-	Short Description: Data compiled from the Devereux Slough post-restoration monitoring reports.
+	⁃	File format: Comma separated values (.csv)
+	⁃	Date Created: May 17, 2022
+File x: Bolsa_Chica_Lowlands.csv
+	-	Short Description: Data compiled from the Bolsa Chica Lowlands post-restoration monitoring reports.
+	⁃	File format: Comma separated values (.csv)
+	⁃	Date Created: May 17, 2022
+File x: San_Elijo_Lagoon.csv
+	-	Short Description: Data compiled from the San Elijo Lagoon post-restoration monitoring reports. Not included in Log Response Ratio analysis because only contains pre-restoration baseline data, but is included in indicator classification analyses.
+	⁃	File format: Comma separated values (.csv)
+	⁃	Date Created: May 17, 2022
+File x: Colorado_Lagoon.csv
+	-	Short Description: Data compiled from the Colorado Lagoon post-restoration monitoring reports. Not included in Log Response Ratio analysis because only contains two years of post-restoration monitoring data, but is included in indicator classification analyses.
+	⁃	File format: Comma separated values (.csv)
+	⁃	Date Created: May 17, 2022
+File x: Malibu_Lagoon.csv
+	-	Short Description: Data compiled from the Malibu Lagoon post-restoration monitoring reports. This data set wasn't used for indicator classification analyses due to incomplete data collection, but was still used in the LRR for the data that was collected.
+	⁃	File format: Comma separated values (.csv)
+	⁃	Date Created: May 17, 2022
+File x: South_San_Diego_Bay.csv
+	-	Short Description: Data compiled from the South San Diego Bay post-restoration monitoring reports. This data set wasn't used for the LRR analysis due to incosistent data collection from first to last report, but was still used in the indicator classification analyses.
+	⁃	File format: Comma separated values (.csv)
+	⁃	Date Created: May 17, 2022
+File x: Wetland_Monitoring_LRR.Rmd
+	-	Short Description: Log Response Ratio (LRR) analysis of select indicators from each site other than Malibu Lagoon, San Elijo, Colorado Lagoon, and South San Diego Bay. 
+	⁃	File format: R Markdown (.Rmd)
+	⁃	Date Created: May 17, 2022
+File x: Cluster_&_Corresponding_Analysis.Rmd
+	-	Short Description: Cluster and correspondance analyses and associated graphs to visualize their outcome.
+	⁃	File format: R Markdown (.Rmd)
+	⁃	Date Created: May 17, 2022
+File x: Indicator_Classification_Chart.Rmd
+	-	Short Description: Brief analysis of indicator classification and contains a stacked bar plot of the frequency of each indicator group at each site.
+	⁃	File format: R Markdown (.Rmd)
+	⁃	Date Created: May 17, 2022
+File x: Map_of_Project_Site_Locations.mxd
+	-	Short Description: This map displays the locations of the restoration projects.   
+	⁃	File format: map exchange document (.mxd)
+	⁃	Date Created: May 17, 2022
+File x: Map_of_Metrics_Used_at_Project_Sites.mxd
+	-	Short Description: This map displays all metrics used at each project site. 
+	⁃	File format: map exchange document (.mxd)
+	⁃	Date Created: May 17, 2022
+File x: Map_of_Number_of_Metrics_Used_at_Project_Sites.mxd
+	-	Short Description: This map shows how many metrics were used at each site. 
+	⁃	File format: map exchange document (.mxd)
+	⁃	Date Created: May 17, 2022
+File x: 
+	-	Short Description: 
+	⁃	File format: 
+	⁃	Date Created: May 17, 2022
+File x: 
+	-	Short Description: 
+	⁃	File format: 
+	⁃	Date Created: May 17, 2022
+
+Sharing and Accessing Information
+Licenses or restrictions placed on the data: no licenses or restrictions are placed on this data. 
+
+Methodology
+---------------------------------------------------
+*Data collection: Data was collected directly from the monitoring reports recieved for each site. Any data presented in these reports were compiled regardless of type of data. Both categorical and quantitative data were collected as well as pre-restoration (baseline) data and reference data if present. Data was taken from text, figures, and tables. For each data point recorded, we collected all of the following (if present): (1) Site name, (2) Sub site, (3) Habitat Type, (4) Habitat Type Area (acres), (5) Year post-completion, (6) Year, (7) Date Details, (8) Metrics, (9) Values, (10) Units, (11) Metric Groups, (12) Metric Type, (13) Collection Method, (14) Data Collection Frequency, (15) Restoration Goal Met? (Y/N), (16) Metric Significance, (17) Analyzed by who?, and (18) Notes. Each sites was compiled individually and compiled into a master data sheet once all the reports for the site were completed. 
+
+*Indicator classification: The monitoring reports we analyzed had a mix of raw data, processed data, and conflicting monitoring indicators. We followed a similar methodology as Faber-Langendoen et al. (2006) to sort the information from the reports into “measurements,” “metrics,” and “indicators.” We define measurements to be any value that was collected directly from the field, metrics to be the values derived from measurements, and indicators to be representative of closely related metrics. In our data collection we compiled all three types depending on what the monitoring reports contained. We came up with a standardized list of 13 indicator categories that were commonly used throughout the monitoring reports to consolidate variations in naming or common function: (1) Water Quality, (2) Soil, (3) Topography, (4) Hydrology, (5) Vegetation Cover, (6) Vegetation Species Diversity, (7) Vegetative Growth and Health, (8) Non-native Species, (9) Fish, (10) Birds, (11) Endangered Species, (12) Invertebrates, (13) Other Fauna. We counted the frequency for each category by counting how many indicators were used within each one. However, not all measurements or metrics had explicitly stated indicators, so as long as an indicator was implied we would count it (e.g. if a list of species was given, we counted that as a diversity indicator even if no calculated value was given). There were also indicators that could fit multiple categories but were placed in the category that had greater importance placed on it (e.g. non-native vegetation cover would be placed in the “exotic species” category over the “vegetation cover” category). If a report had multiple indicators that measured similar variables but each indicator had a unique methodology, then we counted them separately in our frequency table, to account for the concerted effort necessary to collect that data.  The different methodology could also result in measurements that could be interpreted differently (e.g. fish abundance measurements in South San Diego Bay were taken with three different kinds of traps which all gave varying results, so each type of trap was counted separately). If one methodology was used for a monitoring activity, but multiple results were given that had unique importance then each one of importance was counted (e.g. for one bird survey both “bird abundance” and “bird diversity” would be counted under the bird category). If an indicator was used at multiple locations within a site, it would only be counted separately if the habitat type changed between locations. Sampling different habitats could capture unique results. Any historical data (e.g. precipitation or temperature), data that represented restoration actions (e.g. number of plants planted), or reference site data were not included in the frequency table. Overall, the methods do determine what counted as an indicator and what didn’t were complicated and relatively subjective. To help explain our process in determining what would count as well as help classify future monitoring activities we created a flowchart to help classify whether a specific measurement or data point from the reports qualified as an indicator 
+
+*LRR analysis: The first major step in the LRR analysis was to tidy the data to reduce each site to the variables that were quantifiable and could be compared from the first year of monitoring to the last year of monitoring. Once each site had been filtered for the pertinent data, the individual sites were recombined to create one table with new columns that represented the degraded state (first year), restored state (most recent year), and the reference site (if available). Log response ratios were calculated to compare degraded-restored with the expected outcome to be positive (expected negative values for nonnative species were multiplied by negative 1) and to calculate restored-restored (expected values of 0 to represent no change from reference). These LRR values were avegerage and calculated for their standard deviation for each indicator group for each site to get mean LRR for each indicator group within each one. Theses averaged LRR values for each site's indicator groups were then graphed onto an axis of negative to positive values grouped by indicator category.
+
+*Cluster analysis: We selected only three columns for the analysis from the "Monitoring_Master_Data.csv" - Site Name, Metrics and Metric Type. We performed cluster analysis to find the unique value (number of counts) of each metric type for each site. We visualized the data using heatmap. We performed cluster analysis on "Indicator_data.csv" to analyze the commonalities between the indicators at all the 8 sites. 
+
+*Correspondance analysis: We performed Corresponding Analysis (CA) on two datasets: (1) "Monitoring_Master_Data.csv" and (2) "Indicator_data.csv". We aggregated the data of all the 8 remaining sites and selected only three columns for the analysis: 'Site Name', 'Metrics" and 'Metric Type'. We found the most commonly used metric types were 'Biological', 'Physical' and 'Chemical' and they were correlated and were used to define the success of the restoration projects.
+
+*Map of Project Site Locations: The restoration monitoring reports were used to find the location of each site.  A red circle was placed on each site marking the location.
+
+*Map of Metrics Used at Project Sites: The database of metrics used was used to create multipoint shapefiles for each metric.  A point for each metric was placed at each project site so that sites show all metrics used at that site.
+
+*Map of Number of Metrics Used at Project Sites: The database of metrics used was used to create an attribute table listing each site and the number of metrics used at those sites. The attribute table was used to create a multipoint shapefile of metrics used at site.  Points were placed on each site and a gradient color scale was used to show the range of the number of metrics used at each site. 
+
+Monitoring_Master_Data Specific Information
+---------------------------------------------------
+Monitoring_Master_Data consists of  18 columns, 6869 rows. 
+Descriptions of columns in “metadata” sheet in the .xlsx file and in its corresponding .csv file. 
